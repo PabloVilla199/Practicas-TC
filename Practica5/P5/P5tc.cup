@@ -1,0 +1,133 @@
+/* ----------------------Seccion de declaraciones package e imports--------------------*/
+
+import java_cup.runtime.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.text.ParserException;
+
+
+/*---------------- Parser Code ------------------------------------------*/
+
+parser code {:
+
+ArrayList<String> L_espacios = new ArrayList<>;
+ArrayList<String> L_tipos = new ArrayList<>;
+
+public Class Evento{
+  	string nombre;
+	Date inicio;
+	Date fin;
+ 
+public evento(String nombre, Date inicio, Date fin){
+	this.nombre = nomre;
+	this.inicio = inicio;
+	this.fin = fin;
+
+}
+
+}
+ArrayList<Evento> Eventos = new ArrayList<>;
+
+public void insertar_espacio(String nombre){
+
+	if(L_espacio.contains(nombre)){
+	  System.out.Println("Error el espacio ya ha sido introducido");
+	}
+	else{
+	    L_espacios.add(nombre);
+	}
+}
+
+public void insertar_tipo(String nombre){
+
+	if(L_espacio.contains(nombre)){
+	  System.out.Println("Error el tipo ya ha sido introducido");
+	}
+	else{
+	   L_tipos.add(nombre);
+	}
+}
+public boolean reservas_solapadas(String nombre,Date inici,Date fini){
+
+	for(int i = 0; i < Eventos.size(); i++){
+
+		if(Eventos.get(i).nombre.equals(nombre) && inici.before(Eventos.get(i).fin) || inicio.before(Eventos.get(i).fin){
+			return true;
+		}
+	}
+
+}
+
+:};
+
+
+/* ------------Declaracion de la lista de simbolos de la gramatica-----------*/
+
+terminal LIST_ESPACIO, LIST_TIPOS, LIST_EVENTOS, IGUAL, COMA, PUNTOCOMA, LLAVE_APR, LLAVE_FIN;
+
+non terminal S, ESPACIOS, TIPOS, EVENTOS;
+
+terminal String NOM_ESPACIOS,NOM_TIPOS, NOM_EVENTOS, FECHA, HORA;
+
+/* -------------Declaracion de precedencias -----------*/
+
+precedence left LIST_ESPACIO, LIST_TIPOS, LIST_EVENTOS, NOM_ESPACIOS, NOM_TIPOS, NOM_EVENTOS, FECHA, HORA;
+
+
+/* --------------Declaracion de la gramatica -----------*/
+
+S ::=  LIST_ESPACIO LLAVE_APR ESPACIOS LLAVE_FIN | LIST_TIPOS LLAVE_APR TIPOS LLAVE_FIN | LIST_EVENTOS LLAVE_APR EVENTOS LLAVE_FIN|error;
+
+ESPACIOS ::= NOM_ESPACIOS:n_espacio 
+{:insertar_espacio(n_espacio) :}
+
+ESPACIOS | NOM_ESPACIOS:n_espacio
+{:insertar_espacio(n_espacio) :}
+ COMA ESPACIOS | ;
+
+TIPOS ::= NOM_TIPOS:n_tipo
+{:insertar_tipo(n_tipo) :}
+ TIPOS | NOM_TIPOS COMA TIPOS | ;
+
+EVENTOS ::= NOM_EVENTOS IGUAL NOM_TIPOS: n_tipo
+{: 
+    if(!L_tipos.contains(n_tipo)){
+	System.out.println("error nombre no reconocido");
+   }
+:} 
+IGUAL NOM_ESPACIOS:n_espacios
+{: 
+   if(!L_espacios.contains(n_espacios)){
+	System.out.println("error nombre no reconocido");
+   }
+
+:}
+ IGUAL FECHA: idInicio HORA : idHoraInicio IGUAL FECHA:idFin HORA:idHoraFin PUNTOCOMA EVENTOS | ;
+{:
+	try {
+
+ 		SimpleDateFormat fecha = new SimpleDateFormat("dd/mm/aaaa hh:nn");
+ 		Date inicio = fecha.parse(idInicio + " " + idHoraInicio);
+ 		Date fin = fecha.parse(idFin + " " + idHoraFin);
+ 
+ 
+ 		if(fin.before(inicio)){
+   			System.out.println("error fecha no valida);
+		} else{
+     			System.out.println("fecha valida");
+		}
+		if(reservas_solapadas(n_espacios,inicio,fin){
+			system.out.println("Error las reservas estan solapadas");
+		}
+		else{
+
+			Evento v1 = new Evento(n_espacios,inicio,fin);
+			Eventos.add(v1);
+			
+		}
+
+	} catch(ParseException e) {
+		System.out.println("Error mal ");	
+	}
+:}

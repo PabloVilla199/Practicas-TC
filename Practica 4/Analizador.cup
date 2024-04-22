@@ -1,0 +1,21 @@
+/* ----------------------Seccion de declaraciones package e imports--------------------*/
+
+import java_cup.runtime.*;
+
+/* ------------Declaracion de la lista de simbolos de la gramatica-----------*/
+
+terminal LIST_ESPACIO, LIST_TIPOS, LIST_EVENTOS, IGUAL, COMA, PUNTOCOMA, LLAVE_APR, LLAVE_FIN, NOM_ESPACIOS, NOM_TIPOS, NOM_EVENTOS, FECHA, HORA;
+
+non terminal S, ESPACIOS, TIPOS, EVENTOS;
+
+/* -------------Declaracion de precedencias -----------*/
+
+precedence left LIST_ESPACIO, LIST_TIPOS, LIST_EVENTOS, NOM_ESPACIOS, NOM_TIPOS, NOM_EVENTOS, FECHA, HORA;
+
+
+/* --------------Declaracion de la gramatica -----------*/
+
+S ::=   LIST_ESPACIO LLAVE_APR ESPACIOS LLAVE_FIN | LIST_TIPOS LLAVE_APR TIPOS LLAVE_FIN | LIST_EVENTOS LLAVE_APR EVENTOS LLAVE_FIN;
+ESPACIOS ::= NOM_ESPACIOS ESPACIOS | NOM_ESPACIOS COMA ESPACIOS | ;
+TIPOS ::= NOM_TIPOS TIPOS | NOM_TIPOS COMA TIPOS | ;
+EVENTOS ::= NOM_EVENTOS IGUAL NOM_TIPOS IGUAL NOM_ESPACIOS IGUAL FECHA HORA IGUAL FECHA HORA PUNTOCOMA EVENTOS | ;
